@@ -37,7 +37,7 @@ function drawline(sx,sy,dx,dy,color) {
  
 // Object Ridge creation
 function Ridge() {
- this.up = 1; 
+ this.up = 0; 
  this.right =0;
  this.down=0;
  this.left=0;
@@ -73,11 +73,30 @@ var main = function() {
      for (var c=1;c<=sizec;c++)
      {
        cell[r][c]= new Cell(r,c);
-       cell[r][c].draw(50,50);
+     }
+   }  
+ 
+  // Change some values of ridges
+  cell[1][1].ridge.up=1;
+  cell[1][1].ridge.right=1;
+  cell[2][1].ridge.right=1;
+  cell[2][1].ridge.down=1;
+  cell[2][1].ridge.left=1;
+   
+  // Additionnal identical values
+  cell[1][2].ridge.left=1;
+  cell[2][2].ridge.left=1;
+  cell[3][1].ridge.up=1;
+ 
+  // Now draw the Board
+  for (var r=1;r<=sizer;r++)
+  { for (var c=1;c<=sizec;c++)
+     { cell[r][c].draw(50,50);
      }
    }  
   contxt.stroke();
- 
+  
+  
   console.log("start init");
   
   console.log(cell[3][2].ridge.down);
