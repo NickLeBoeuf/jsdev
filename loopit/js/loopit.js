@@ -13,21 +13,31 @@ function Cell(row,col) {
 Cell.prototype.draw = function(ox,oy) {
   // ox and oy are the origin of the upper left cell of the board
   var w = this.pwidth;
-
   var wx2 = w/2-5;  // 5 is because we use a 20 px font
   var wy2 = w/2+5;
   contxt.font="20px Verdana";
-
-  contxt.strokeStyle="#FF0000";
-  contxt.rect(ox+w*this.col,oy+w*this.row,w,w);
+  var ul = {x:ox+w*this.col,y:oy+w*this.row};
+  var ur = {x:ox+w*this.col+w,y:oy+w*this.row};
+  var dl = {x:ox+w*this.col,y:oy+w*this.row+w};
+  var dr = {x:ox+w*this.col+w,y:oy+w*this.row+w};
   contxt.fillText(this.number.toString(), ox+w*this.col + wx2 ,oy+w*this.row + wy2);
-  console.log(ox+w*this.col,oy+w*this.row,this.row,this.col);
-  
+  drawline(ul.x,ul.y,ur.x,ur.y, this.ridge.up);
+  drawline(ur.x,ur.y,dr.x,dr.y, this.ridge.right);
+  drawline(dl.x,dl.y,dr.x,dr.y, this.ridge.down);
+  drawline(dl.x,dl.y,ul.x,ul.y, this.ridge.left);
+}
+
+function drawline(sx,sy,dx,dy,color) {
+  contxt.beginPath();
+  if (color==1) { contxt.strokeStyle="#FF0000"} else {contxt.strokeStyle="#AAAAAA"}
+  contxt.moveTo(sx,sy);
+  contxt.lineTo(dx,dy);
+  contxt.stroke();
 }
  
 // Object Ridge creation
 function Ridge() {
- this.up = 0;
+ this.up = 1; 
  this.right =0;
  this.down=0;
  this.left=0;
