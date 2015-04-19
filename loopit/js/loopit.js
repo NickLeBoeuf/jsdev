@@ -1,4 +1,3 @@
-//alert(" Start loopit.js");
 
 // Object Ridge creation
 function Ridge(row,col) {
@@ -59,8 +58,6 @@ function drawline(sx,sy,dx,dy,color) {
 }
  
 
-
-
 // Global variables ,and global common ridge arrays creation
 var sizer = 4; var sizec = 4;
 var cell =[];
@@ -76,6 +73,24 @@ for (var r=1;r<=sizer+1;r++)
     ridgev[r][c]= 0;
   }
 }  
+
+// randint function : return an integer between 0 and int-1
+function randint(int) { return Math.floor((Math.random()*int)); }
+
+// Generate Loop of minlength function
+function generateloop(minlength) {
+  // Choose start point randomly in the board
+  var start = {r:randint(sizer)+1, c:randint(sizec)+1};
+  console.log("start in", start.r, start.c);
+}
+
+var vector = function(row,col,dir) {
+  self.row = row;
+  self.col = col;
+  self.dir = dir;
+}
+// Define a function that return the dest according to the dir
+
 
 // Main function, launched at html page loading
 
@@ -107,11 +122,6 @@ var main = function() {
   cell[2][1].ridge.down=1;
   cell[2][1].ridge.left=1;
    
-  // Additionnal identical values
- // cell[1][2].ridge.left=1;
- // cell[2][2].ridge.left=1;
- // cell[3][1].ridge.up=1;
- 
   // Now draw the Board
   for (var r=1;r<=sizer;r++)
   { for (var c=1;c<=sizec;c++)
@@ -123,15 +133,14 @@ var main = function() {
   
   console.log("start init");
   
-  console.log(cell[2][1].ridge.down);
-  console.log(cell[3][1].ridge.up);
-  cell[2][1].ridge.down = 0;
-  console.log(cell[2][1].ridge.down);
-  console.log(cell[3][1].ridge.up);
-  
+//   console.log(cell[2][1].ridge.down);
+//   console.log(cell[3][1].ridge.up);
+//   cell[2][1].ridge.down = 0;
+//   console.log(cell[2][1].ridge.down);
+//   console.log(cell[3][1].ridge.up);
   
   console.log("end init");
-
+  generateloop(10);
 
 
 
