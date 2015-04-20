@@ -92,6 +92,42 @@ var vector = function(row,col,dir) {
 // Define a function that return the dest according to the dir
 
 
+// build function : the function at the heart of the loop creation
+// It is a function called recursively.
+function build(vector, minlength) {
+  // 1 - test if we can draw if the direction of the vector, using drawtest function
+  // 2 - drawtest will return -> OK, CANT, STOP (loop is closed)
+  // 2a - STOP: if loop is closed and long enough -> build()return DONE (loop is looped)
+  // 2b - STOP: if loop is closed and too short -> build()return CANT (cant build there, dead end)
+  // 2c - CANT: we cant build in that direction -> build()return CANT (cant build there, dead end)
+  // 2d - OK : 2da : we can draw in that direction. so let's call build again:
+  //           2db : set the ridge in the board
+  //           2dc : Create an array of 4 directions, removing directly the one we are coming from
+  //           2dd : Loop into the array directions (using a while loop)
+  //           2de :   - call the chooseDirection function (with a smart algorithm...;)
+  //           2df :   - remove the chooosenDirection from the Direction Array
+  //           2dg :   - call the build function again 
+  //           2dh :   - test the return of the build -> if CANT, then loop
+  //                                                  -> if DONE then build()return DONE
+  //           2di :   - if there's no more direction to loop with, then build()return CANT
+  // Use splice() and indexOf() of the Array object to remember the directions that have not been searched yet
+  
+}
+
+function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) {
+ // This function will return the direction to go to, depending on the current location
+ // and where the line is coming from. It will use also the common ridge arrays to do the statistics.
+ }
+
+function drawtest(vector) {
+ // this function test if we can draw in the direction of the vector (vector is a location+dir)
+ // return possibilities are :
+  // 2a - STOP: drawing to a corner were a unique line is already arriving : Closing the loop
+  // 2c - CANT: cant build in that direction -> there's an edge, or destination is a corner with already two lines (forming L or I or -)
+  // 2d - OK : can draw in that direction. (if two above don't apply, then it's OK)
+}
+
+
 // Main function, launched at html page loading
 
 var main = function() {
