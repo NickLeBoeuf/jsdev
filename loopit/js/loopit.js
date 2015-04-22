@@ -58,7 +58,7 @@ function drawline(sx,sy,dx,dy,color) {
 }
  
 
-// Global variables ,and global common ridge arrays creation
+// Global variables ,and global common ridge arrays creation + cells
 var sizer = 4; var sizec = 4;
 var cell =[];
 var ridgeh =[];
@@ -73,6 +73,19 @@ for (var r=1;r<=sizer+1;r++)
     ridgev[r][c]= 0;
   }
 }  
+  // Initialisation of the board with creation of cells
+  for (var r=1;r<=sizer;r++)
+  {
+     cell[r]=[];
+     for (var c=1;c<=sizec;c++)
+     {
+       cell[r][c]= new Cell(r,c);
+       cell[r][c].ridge = new Ridge(r,c);
+     }
+   }  
+
+
+
 
 // randint function : return an integer between 0 and int-1
 function randint(int) { return Math.floor((Math.random()*int)); }
@@ -80,15 +93,42 @@ function randint(int) { return Math.floor((Math.random()*int)); }
 // Generate Loop of minlength function
 function generateloop(minlength) {
   // Choose start point randomly in the board
-  var start = {r:randint(sizer)+1, c:randint(sizec)+1};
+  var start = {r:randint(sizer+1)+1, c:randint(sizec+1)+1};
   console.log("start in", start.r, start.c);
 }
 
-var vector = function(row,col,dir) {
-  self.row = row;
-  self.col = col;
-  self.dir = dir;
+// Vector Object definition
+function Vector(row,col,dir) {
+  this.row = row; //varr[0];
+  this.col = col; //varr[1];
+  this.dir = dir; //varr[2];
+  Object.defineProperty(this, "val", {
+    get: function() {return [this.row,this.col,this.dir]},
+    set: function(val) {console.log('set called with',val);this.row=val[0]; this.col=val[1];this.dir=val[2];  }   
+    });
 }
+
+//var vectorarr = [3,5,'down'];
+var testv = new Vector(2,4,'up');
+console.log(testv);
+testv.v = [4,6,'down'];
+console.log(testv.val);
+console.log(testv.row);
+
+
+//console.log(vectorarr);
+
+// Direction Object definition
+//function Direction() {
+// this.dir = null;
+//  Object.defineProperty(this, "", {
+//    get: function() {return this.dir},
+//    set: function(val) {this.dir=val;  }   });
+//}
+  
+
+
+
 // Define a function that return the dest according to the dir
 
 
@@ -119,12 +159,38 @@ function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) 
  // and where the line is coming from. It will use also the common ridge arrays to do the statistics.
  }
 
-function drawtest(vector) {
+
+drawv = new Vector(4,2,'right');
+console.log(drawtest(drawv));
+
+
+function drawtest(vect) {
  // this function test if we can draw in the direction of the vector (vector is a location+dir)
  // return possibilities are :
   // 2a - STOP: drawing to a corner were a unique line is already arriving : Closing the loop
   // 2c - CANT: cant build in that direction -> there's an edge, or destination is a corner with already two lines (forming L or I or -)
   // 2d - OK : can draw in that direction. (if two above don't apply, then it's OK)
+  
+  var r = vect.row;
+  var c = vect.col;
+  var d = vect.dir;
+  // Test if there's an edge
+//  if ((vect.row === 0 & vect.dir === 'left') |
+//      (vect.row === sizer+1 & vect.dir === 'right') |
+//      (vect.col === 0 & vect.dir === 'up') |
+//      (vect.col === sizec+1 & vect.dir === 'down'))
+//      {return 'CANT'};
+  if ((c === 0 & d === 'left') |
+      (c === sizec+1 & d === 'right') |
+      (r === 0 & d === 'up') |
+      (r === sizer+1 & d === 'down'))
+      {return 'CANT'};
+      
+  // Test if there's already a line
+  if (d === 'up' & cell[r-1][c].ridge.left===1) {return 'CANT'};
+  
+  
+  return 'OK';
 }
 
 
@@ -140,16 +206,6 @@ var main = function() {
   logoloopit.src = "./img/Loopit.jpg";
   canvasLoopIt2DContext.drawImage(logoloopit,100,0);
 
-  // Initialisation of the board with creation of cells
-  for (var r=1;r<=sizer;r++)
-  {
-     cell[r]=[];
-     for (var c=1;c<=sizec;c++)
-     {
-       cell[r][c]= new Cell(r,c);
-       cell[r][c].ridge = new Ridge(r,c);
-     }
-   }  
  
   // Change some values of ridges
   cell[1][1].ridge.up=1;
