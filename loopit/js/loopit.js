@@ -109,11 +109,11 @@ function Vector(row,col,dir) {
 }
 
 //var vectorarr = [3,5,'down'];
-var testv = new Vector(2,4,'up');
-console.log(testv);
-testv.v = [4,6,'down'];
-console.log(testv.val);
-console.log(testv.row);
+// var testv = new Vector(2,4,'up');
+// console.log(testv);
+// testv.v = [4,6,'down'];
+// console.log(testv.val);
+// console.log(testv.row);
 
 
 //console.log(vectorarr);
@@ -160,43 +160,56 @@ function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) 
  }
 
 
-drawv = new Vector(4,2,'right');
-console.log(drawtest(drawv));
 
-
-function drawtest(vect) {
- // this function test if we can draw in the direction of the vector (vector is a location+dir)
- // return possibilities are :
-  // 2a - STOP: drawing to a corner were a unique line is already arriving : Closing the loop
-  // 2c - CANT: cant build in that direction -> there's an edge, or destination is a corner with already two lines (forming L or I or -)
-  // 2d - OK : can draw in that direction. (if two above don't apply, then it's OK)
-  
-  var r = vect.row;
-  var c = vect.col;
-  var d = vect.dir;
-  // Test if there's an edge
-//  if ((vect.row === 0 & vect.dir === 'left') |
-//      (vect.row === sizer+1 & vect.dir === 'right') |
-//      (vect.col === 0 & vect.dir === 'up') |
-//      (vect.col === sizec+1 & vect.dir === 'down'))
-//      {return 'CANT'};
-  if ((c === 0 & d === 'left') |
-      (c === sizec+1 & d === 'right') |
-      (r === 0 & d === 'up') |
-      (r === sizer+1 & d === 'down'))
-      {return 'CANT'};
-      
-  // Test if there's already a line
-  if (d === 'up' & cell[r-1][c].ridge.left===1) {return 'CANT'};
-  
-  
-  return 'OK';
-}
 
 
 // Main function, launched at html page loading
 
 var main = function() {
+  
+  function drawtest(vect) {
+   // this function test if we can draw in the direction of the vector (vector is a location+dir)
+   // return possibilities are :
+    // 2a - STOP: drawing to a corner were a unique line is already arriving : Closing the loop
+    // 2c - CANT: cant build in that direction -> there's an edge, or destination is a corner with already two lines (forming L or I or -)
+    // 2d - OK : can draw in that direction. (if two above don't apply, then it's OK)
+    
+    var r = vect.row;
+    var c = vect.col;
+    var d = vect.dir;
+    // Test if there's an edge
+    if ((c === 0 && d === 'left') ||
+        (c === sizec+1 && d === 'right') ||
+        (r === 0 && d === 'up') ||
+        (r === sizer+1 && d === 'down'))
+        {return 'CANT'};
+        
+    // Test if there's already a line
+    if ((d === 'up' && cell[r-1][c].ridge.left===1) ||
+       (d === 'down' && cell[r][c].ridge.left===1) ||
+       (d === 'right' && cell[r][c].ridge.up===1) ||
+       (d === 'left' && cell[r][c-1].ridge.up===1)  )
+      {return 'CANT'};
+    
+    // Test if line arrives in a corner with already two lines (forming L or I or -)
+    if ((d === 'up' && ( (cell[r-1][c].ridge.up===1 & cell[r-1][c-1].ridge.up===1) ||
+                         (cell[r-2][c].ridge.left===1 & cell[r-2][c].ridge.down===1) ||
+                         (cell[r-2][c-1].ridge.right===1 & cell[r-2][c-1].ridge.down===1))) ||
+        (d === 'down' && ( (cell[r][c-1].ridge.down===1 & cell[r][c].ridge.down===1) ||
+                           (cell[r+1][c].ridge.left===1 & cell[r+1][c].ridge.up===1) ||
+                           (cell[r+1][c-1].ridge.right===1 & cell[r+1][c-1].ridge.up===1))) ||
+        (d === 'right' && ( (cell[r][c+1].ridge.left===1 & cell[r-1][c+1].ridge.left===1) ||
+                            (cell[r-1][c+1].ridge.left===1 & cell[r-1][c+1].ridge.down===1) ||
+                            (cell[r][c+1].ridge.up===1 & cell[r][c+1].ridge.left===1))) ||
+        (d === 'left' && ( (cell[r][c-1].ridge.left===1 & cell[r-1][c-1].ridge.left===1) ||
+                         (cell[r-1][c-2].ridge.right===1 & cell[r-1][c-2].ridge.down===1) ||
+                         (cell[r][c-2].ridge.up===1 & cell[r][c-2].ridge.right===1))) )
+      {return 'CANT'};                    
+                      
+    // if None of the case above applies, then line can be drawn
+    return 'OK';
+  }
+
   var logoloopit;
   canvasLoopIt = document.getElementById('canvasLoopIt');
   canvasLoopIt2DContext = canvasLoopIt.getContext('2d');
@@ -211,7 +224,10 @@ var main = function() {
   cell[1][1].ridge.up=1;
   cell[1][1].ridge.right=1;
   cell[2][1].ridge.right=1;
-  cell[2][1].ridge.down=1;
+//   var q=2;
+//   console.log("cell21r=",cell[2][q-1].ridge.right);
+//   console.log("cell22l=",cell[2][q].ridge.left);
+    cell[2][1].ridge.down=1;
   cell[2][1].ridge.left=1;
    
   // Now draw the Board
@@ -222,8 +238,14 @@ var main = function() {
    }  
   contxt.stroke();
   
+  drawv = new Vector(5,2,'up');
+  console.log("c22=",cell[2][2].ridge.left);
+  console.log("c21=",cell[2][1].ridge.right);
+  console.log(drawtest(drawv));
+
+
   
-  console.log("start init");
+//  console.log("start init");
   
 //   console.log(cell[2][1].ridge.down);
 //   console.log(cell[3][1].ridge.up);
@@ -231,7 +253,7 @@ var main = function() {
 //   console.log(cell[2][1].ridge.down);
 //   console.log(cell[3][1].ridge.up);
   
-  console.log("end init");
+ // console.log("end init");
   generateloop(10);
 
 
