@@ -90,12 +90,7 @@ for (var r=1;r<=sizer+1;r++)
 // randint function : return an integer between 0 and int-1
 function randint(int) { return Math.floor((Math.random()*int)); }
 
-// Generate Loop of minlength function
-function generateloop(minlength) {
-  // Choose start point randomly in the board
-  var start = {r:randint(sizer+1)+1, c:randint(sizec+1)+1};
-  console.log("start in", start.r, start.c);
-}
+
 
 // Vector Object definition
 function Vector(row,col,dir) {
@@ -128,35 +123,20 @@ function Vector(row,col,dir) {
   
 
 
-
 // Define a function that return the dest according to the dir
 
 
-// build function : the function at the heart of the loop creation
-// It is a function called recursively.
-function build(vector, minlength) {
-  // 1 - test if we can draw if the direction of the vector, using drawtest function
-  // 2 - drawtest will return -> OK, CANT, STOP (loop is closed)
-  // 2a - STOP: if loop is closed and long enough -> build()return DONE (loop is looped)
-  // 2b - STOP: if loop is closed and too short -> build()return CANT (cant build there, dead end)
-  // 2c - CANT: we cant build in that direction -> build()return CANT (cant build there, dead end)
-  // 2d - OK : 2da : we can draw in that direction. so let's call build again:
-  //           2db : set the ridge in the board
-  //           2dc : Create an array of 4 directions, removing directly the one we are coming from
-  //           2dd : Loop into the array directions (using a while loop)
-  //           2de :   - call the chooseDirection function (with a smart algorithm...;)
-  //           2df :   - remove the chooosenDirection from the Direction Array
-  //           2dg :   - call the build function again 
-  //           2dh :   - test the return of the build -> if CANT, then loop
-  //                                                  -> if DONE then build()return DONE
-  //           2di :   - if there's no more direction to loop with, then build()return CANT
-  // Use splice() and indexOf() of the Array object to remember the directions that have not been searched yet
-  
-}
+
 
 function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) {
  // This function will return the direction to go to, depending on the current location
  // and where the line is coming from. It will use also the common ridge arrays to do the statistics.
+  var randnum = randint(4);
+  if (randnum === 0) {return 'up'}
+  else if (randnum === 1) {return 'right'}
+  else if (randnum === 2) {return 'down'}
+  else {return 'left'}
+   
  }
 
 
@@ -166,6 +146,63 @@ function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) 
 // Main function, launched at html page loading
 
 var main = function() {
+  var looplength = 0; // initial length of the loop is zero
+
+  // Generate Loop of minlength function
+  function generateloop(minlength) {
+    // Choose start point randomly in the board
+    var start = {r:randint(sizer+1)+1, c:randint(sizec+1)+1};
+    console.log("start in", start.r, start.c);
+    vector = new Vector(start.r,start.c, choosedirection());
+    console.log("build with vector : ", vector);
+    var minlen=12;
+    build(vector,minlen);
+  }
+  
+
+  // build function : the function at the heart of the loop creation
+  // It is a function called recursively.
+  function build(vector, minlength) {
+    // 1 - test if we can draw if the direction of the vector, using drawtest function
+    // 2 - drawtest will return -> OK, CANT, STOP (loop is closed)
+    // 2a - STOP: if loop is closed and long enough -> build()return DONE (loop is looped)
+    // 2b - STOP: if loop is closed and too short -> build()return CANT (cant build there, dead end)
+    // 2c - CANT: we cant build in that direction -> build()return CANT (cant build there, dead end)
+    // 2d - OK : 2da : we can draw in that direction. so let's call build again:
+    //           2db : set the ridge in the board
+    //           2dc : Create an array of 4 directions, removing directly the one we are coming from
+    //           2dd : Loop into the array directions (using a while loop)
+    //           2de :   - call the chooseDirection function (with a smart algorithm...;)
+    //           2df :   - remove the chooosenDirection from the Direction Array
+    //           2dg :   - call the build function again 
+    //           2dh :   - test the return of the build -> if CANT, then loop
+    //                                                  -> if DONE then build()return DONE
+    //           2di :   - if there's no more direction to loop with, then build()return CANT
+    // Use splice() and indexOf() of the Array object to remember the directions that have not been searched yet
+    
+    // -1
+    var draw = drawtest(vector);
+    console.log("drawtest returned:",draw);
+    if (draw === 'STOP' && looplength >= minlength) {return 'DONE'}
+    else if (draw === 'STOP' && looplength < minlength) {return 'CANT'}
+    else if (draw === 'CANT') {return 'CANT'}
+    else if (draw === 'OK') {
+      // increase loop length
+      looplength = looplength + 1;
+      // draw the ridge
+      // ------  setridge(vector);
+      // prepare the array of possible directions
+      remainingdirections = ['up','right','down','left'];
+      // remove the direction we're coming from (so it is the #! opposite of vector.dir)
+      remainingdirections.splice(remainingdirections.indexOf(vector.oppositedir),1);
+      // now loop into these directions and continue the loop if possible.
+      console.log('go to these dirs:',remainingdirections);
+    
+      
+    
+    }
+    
+  }
   
   function drawtest(vect) {
    // this function test if we can draw in the direction of the vector (vector is a location+dir)
