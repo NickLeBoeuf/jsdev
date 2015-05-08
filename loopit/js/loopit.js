@@ -116,7 +116,7 @@ function drawline(sx,sy,dx,dy,color) {
 // IMPORTANT: Note that the upper left cell is cell[1][1].
 // but we define addtionnal columns and rows all around the table
 // to avoid painful test at the borders
-var sizer = 2; var sizec = 2;
+var sizer = 3; var sizec = 3;
 var cell =[];
 var ridgeh =[];
 var ridgev =[];
@@ -192,7 +192,7 @@ function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) 
 
 var main = function() {
   var looplength = 0; // initial length of the loop is zero
-  lcg.setSeed(1);
+  lcg.setSeed();
   
   // Generate Loop of minlength function
   function generateloop(minlength) {
@@ -201,8 +201,7 @@ var main = function() {
     console.log("start in", start.r, start.c);
     vector = new Vector(start.r,start.c, choosedirection.call(null,['up','down','right','left'], [start.r, start.c] ));
     console.log("build with vector : ", vector);
-    var minlen=2;
-    build(vector,minlen);
+    build(vector,minlength);
   }
   
 
@@ -230,12 +229,19 @@ var main = function() {
     // 1
     var drawresult = drawtest(vector);
     console.log("drawtest returned:",drawresult);
-    draw = drawresult[0];
+    var draw = drawresult[0];
+    console.log("draw is:",draw);
+    var dr = 0, dc =0;
     if (draw === 'OK') { dr = drawresult[1]; dc = drawresult[2];}  // Memorize the destination
     
     // 2
-    if (draw === 'STOP' && looplength >= minlength) {return 'DONE'}
-    else if (draw === 'STOP' && looplength < minlength) {return 'CANT'}
+    if (draw === 'STOP' && (looplength >= minlength)) {
+      console.log('####### LOOPED #######');
+      setridgewith(vector,1,1); // 
+      looplength = looplength + 1;
+      return 'DONE'}
+    else if (draw === 'STOP' && (looplength < minlength)) {
+        console.log('====== TOO SHORT ======');return 'CANT'}
     else if (draw === 'CANT') {return 'CANT'}
     // 2da
     else if (draw === 'OK') {
@@ -251,12 +257,12 @@ var main = function() {
       //console.log('go to these dirs:',remainingdirections.toString(), "length is",remainingdirections.length);
       while (remainingdirections.length != 0) {
         // 2de Choose a direction to go
-        godir=choosedirection(remainingdirections, [dr,dc] , vector);
+        var godir=choosedirection(remainingdirections, [dr,dc] , vector);
         console.log('position is',dr,dc,'chosen to go to ',godir);
         // 2df remove the chooosenDirection from the Direction Array
         remainingdirections.splice(remainingdirections.indexOf(godir),1);
         // 2dg Call the build function (recursively)
-        vectortobuild = new Vector(dr,dc,godir);
+        var vectortobuild = new Vector(dr,dc,godir);
         if (build(vectortobuild,minlength)==='DONE') { return 'DONE'} // Loop is looped !
         // else that means the build() has returned CANT, and so let's continue the while loop.        
         }
@@ -280,21 +286,22 @@ var main = function() {
     var r = vect.row;
     var c = vect.col;
     var d = vect.dir;
-    
+    var dr =0 ;
+    var dc =0 ;
     
     // Test if there's an edge
     if ((c === 1 && d === 'left') ||
         (c === sizec+1 && d === 'right') ||
         (r === 1 && d === 'up') ||
         (r === sizer+1 && d === 'down'))
-        {return 'CANT'};
+      {return new Array('CANT',dr,dc);};                    
         
     // Test if there's already a line
     if ((d === 'up' && cell[r-1][c].ridge.left===1) ||
        (d === 'down' && cell[r][c].ridge.left===1) ||
        (d === 'right' && cell[r][c].ridge.up===1) ||
        (d === 'left' && cell[r][c-1].ridge.up===1)  )
-      {return 'CANT'};
+      {return new Array('CANT',dr,dc);};                    
     
     // Test if line arrives in a corner with already two lines (forming L or I or -)
     if ((d === 'up' && ( (cell[r-1][c].ridge.up===1 && cell[r-1][c-1].ridge.up===1) ||
@@ -313,7 +320,7 @@ var main = function() {
                          (cell[r][c-2].ridge.up===1 && cell[r][c-2].ridge.right===1))) )
 //                         (c>2 && (cell[r-1][c-2].ridge.right===1 && cell[r-1][c-2].ridge.down===1)) ||
 //                         (c>2 && (cell[r][c-2].ridge.up===1 && cell[r][c-2].ridge.right===1)))) )
-      {return 'CANT'};                    
+      {return new Array('CANT',dr,dc);};                    
              
      // Test if the loop is closed
     if ( (d === 'up' &&    (cell[r-1][c].ridge.up===1   ||
@@ -328,7 +335,7 @@ var main = function() {
          (d === 'left' &&  (cell[r-1][c-1].ridge.left===1   ||
                             cell[r][c-1].ridge.left===1 ||
                             cell[r][c-2].ridge.up===1 ))  )
-      { return 'STOP'};                      
+      {return new Array('STOP',dr,dc);};                    
                                              
     // if None of the case above applies, then line can be drawn
     // calculate the destination:
@@ -338,7 +345,7 @@ var main = function() {
       case "down":  dr = r +1; dc = c;   break;
       case "left":  dr = r;    dc = c-1; break;
     } 
-    return ['OK',dr,dc];
+    return new Array('OK',dr,dc);
   }
 
   var logoloopit;
@@ -400,7 +407,7 @@ var main = function() {
 //   console.log(cell[3][1].ridge.up);
   
  // console.log("end init");
-  generateloop(10);
+  generateloop(7);
 
 
 
