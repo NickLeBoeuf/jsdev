@@ -20,8 +20,6 @@ function Ridge(row,col) {
 }
 
 function setridgewith(vector,drawit) {
-  console.log("Set Ridge with Vector:", vector);
-  console.log("and drawit: yes/No:",drawit);
   var r = vector.row;
   var c = vector.col;
   switch(vector.dir) {
@@ -81,9 +79,6 @@ function drawline(sx,sy,dx,dy,color) {
   contxt.beginPath();
   if (color==1) { contxt.fillStyle="black"} else {contxt.fillStyle="#DDDDDD"}
   contxt.fillRect(sx,sy,(dx-sx)+3,(dy-sy)+3);  
-  console.log("drawrect",sx,sy,(dx-sx)+1,(dy-sy)+1)
-//  contxt.moveTo(sx,sy);
-//  contxt.lineTo(dx,dy);
   contxt.stroke();
 }
  
@@ -130,46 +125,37 @@ function Vector(row,col,dir) {
   this.row = row; //varr[0];
   this.col = col; //varr[1];
   this.dir = dir; //varr[2];
+  this.oppositedir = opposite(dir);
   Object.defineProperty(this, "val", {
     get: function() {return [this.row,this.col,this.dir]},
-    set: function(val) {console.log('set called with',val);this.row=val[0]; this.col=val[1];this.dir=val[2];  }   
+    set: function(val) {console.log('set called with',val);
+      this.row=val[0];
+      this.col=val[1];
+      this.dir=val[2];
+      this.oppositedir=opposite(this.dir)
+      }   
     });
-}
-
-//var vectorarr = [3,5,'down'];
-// var testv = new Vector(2,4,'up');
-// console.log(testv);
-// testv.v = [4,6,'down'];
-// console.log(testv.val);
-// console.log(testv.row);
-
-
-//console.log(vectorarr);
-
-// Direction Object definition
-//function Direction() {
-// this.dir = null;
-//  Object.defineProperty(this, "", {
-//    get: function() {return this.dir},
-//    set: function(val) {this.dir=val;  }   });
-//}
-  
-
+    
+  function opposite(direction) {
+    switch(direction) {
+      case "up": return "down"; break;
+      case "right": return "left"; break;
+      case "down": return "up"; break;
+      case "left": return "right"; break;
+    }
+  }
+}  
 
 // Define a function that return the dest according to the dir
-
-
 
 
 function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) {
  // This function will return the direction to go to, depending on the current location
  // and where the line is coming from. It will use also the common ridge arrays to do the statistics.
-  var randnum = randint(4);
-  if (randnum === 0) {return 'up'}
-  else if (randnum === 1) {return 'right'}
-  else if (randnum === 2) {return 'down'}
-  else {return 'left'}
-   
+ // TODO: For the moment, the direction is chosen randomly
+  console.log("array of possible is:", arrayofpossibledirections.toString());
+  var randnum = randint(arrayofpossibledirections.length);
+  return arrayofpossibledirections[randnum];
  }
 
 
@@ -183,7 +169,7 @@ var main = function() {
     // Choose start point randomly in the board
     var start = {r:randint(sizer+1)+1, c:randint(sizec+1)+1};
     console.log("start in", start.r, start.c);
-    vector = new Vector(start.r,start.c, choosedirection());
+    vector = new Vector(start.r,start.c, choosedirection.call(null,['up','down','right','left'], [start.r, start.c] ));
     console.log("build with vector : ", vector);
     var minlen=12;
     build(vector,minlen);
@@ -211,8 +197,11 @@ var main = function() {
     // Use splice() and indexOf() of the Array object to remember the directions that have not been searched yet
     
     // 1
-    var draw = drawtest(vector);
-    console.log("drawtest returned:",draw);
+    var drawresult = drawtest(vector);
+    console.log("drawtest returned:",drawresult);
+    draw = drawresult[0];
+    if (draw === 'OK') { dr = drawresult[1]; dc = drawresult[2];}  // Memorize the destination
+    
     // 2
     if (draw === 'STOP' && looplength >= minlength) {return 'DONE'}
     else if (draw === 'STOP' && looplength < minlength) {return 'CANT'}
@@ -224,11 +213,16 @@ var main = function() {
       setridgewith(vector,1); // The second parameter set to 1 indicates we want to redraw the cell immediatlely
       // 2dc prepare the array of possible directions
       remainingdirections = ['up','right','down','left'];
+      console.log('init remainingdirections:',remainingdirections.toString());
       // remove the direction we're coming from (so it is the #! opposite of vector.dir)
       remainingdirections.splice(remainingdirections.indexOf(vector.oppositedir),1);
       // 2dd now loop into these directions and continue the loop if possible.
-      console.log('go to these dirs:',remainingdirections);
-         
+      console.log('go to these dirs:',remainingdirections.toString(), "length is",remainingdirections.length);
+      while (remainingdirections.length != 0) {
+        godir=choosedirection(remainingdirections, [dr,dc] , vector);
+        console.log('chosen to go to ',godir);
+        remainingdirections.splice(remainingdirections.indexOf(godir),1);
+        }
     
     }
     
@@ -278,7 +272,14 @@ var main = function() {
       {return 'CANT'};                    
                       
     // if None of the case above applies, then line can be drawn
-    return 'OK';
+    // calculate the destination:
+    switch(d) {
+      case "up":    dr = r -1; dc = c;   break;
+      case "right": dr = r;    dc = c+1; break;
+      case "down":  dr = r +1; dc = c;   break;
+      case "left":  dr = r;    dc = c-1; break;
+    } 
+    return ['OK',dr,dc];
   }
 
   var logoloopit;
