@@ -18,6 +18,31 @@ function Ridge(row,col) {
     get: function() {return ridgev[row][col+1];},
     set: function(val) {ridgev[row][col+1]=val;  }   });
 }
+
+function setridgewith(vector,drawit) {
+  console.log("Set Ridge with Vector:", vector);
+  console.log("and drawit: yes/No:",drawit);
+  var r = vector.row;
+  var c = vector.col;
+  switch(vector.dir) {
+    case "up":
+      cell[r-1][c].ridge.left=1;
+      if (drawit===1) { cell[r-1][c].draw();}
+      break;
+    case "right":
+      cell[r][c].ridge.up=1;
+      if (drawit===1) { cell[r][c].draw();}
+      break;
+    case "down":
+      cell[r][c].ridge.left=1;
+      if (drawit===1) { cell[r][c].draw();}
+      break;
+    case "left":
+      cell[r][c-1].ridge.up=1;
+      if (drawit===1) { cell[r][c-1].draw();}
+      break;
+  }
+}
  
  
 //  Object "Cell" creation
@@ -30,8 +55,10 @@ function Cell(row,col) {
 }
 
 // Object Cell "draw" method
-Cell.prototype.draw = function(ox,oy) {
+Cell.prototype.draw = function() {
   // ox and oy are the origin of the upper left cell of the board
+  var ox = 50;
+  var oy = 50;
   var w = this.pwidth;
   var wx2 = w/2-5;  // 5 is because we use a 20 px font
   var wy2 = w/2+5;
@@ -40,6 +67,7 @@ Cell.prototype.draw = function(ox,oy) {
   var ur = {x:ox+w*this.col+w,y:oy+w*this.row};
   var dl = {x:ox+w*this.col,y:oy+w*this.row+w};
   var dr = {x:ox+w*this.col+w,y:oy+w*this.row+w};
+  contxt.fillStyle = "black";
   contxt.fillText(this.number.toString(), ox+w*this.col + wx2 ,oy+w*this.row + wy2);
   drawline(ul.x,ul.y,ur.x,ur.y, this.ridge.up);
   drawline(ur.x,ur.y,dr.x,dr.y, this.ridge.right);
@@ -51,38 +79,43 @@ Cell.prototype.draw = function(ox,oy) {
 // Global function to draw lines easily
 function drawline(sx,sy,dx,dy,color) {
   contxt.beginPath();
-  if (color==1) { contxt.strokeStyle="#FF0000"} else {contxt.strokeStyle="#AAAAAA"}
-  contxt.moveTo(sx,sy);
-  contxt.lineTo(dx,dy);
+  if (color==1) { contxt.fillStyle="black"} else {contxt.fillStyle="#DDDDDD"}
+  contxt.fillRect(sx,sy,(dx-sx)+3,(dy-sy)+3);  
+  console.log("drawrect",sx,sy,(dx-sx)+1,(dy-sy)+1)
+//  contxt.moveTo(sx,sy);
+//  contxt.lineTo(dx,dy);
   contxt.stroke();
 }
  
 
 // Global variables ,and global common ridge arrays creation + cells
+// IMPORTANT: Note that the upper left cell is cell[1][1].
+// but we define addtionnal columns and rows all around the table
+// to avoid painful test at the borders
 var sizer = 4; var sizec = 4;
 var cell =[];
 var ridgeh =[];
 var ridgev =[];
-for (var r=1;r<=sizer+1;r++)
+for (var r=0;r<=sizer+2;r++)
 {
   ridgeh[r]=[];
   ridgev[r]=[];
-  for (var c=1;c<=sizec+1;c++)
+  for (var c=0;c<=sizec+2;c++)
   {
     ridgeh[r][c]= 0;
     ridgev[r][c]= 0;
   }
 }  
-  // Initialisation of the board with creation of cells
-  for (var r=1;r<=sizer;r++)
-  {
-     cell[r]=[];
-     for (var c=1;c<=sizec;c++)
-     {
-       cell[r][c]= new Cell(r,c);
-       cell[r][c].ridge = new Ridge(r,c);
-     }
-   }  
+// Initialisation of the board with creation of cells
+for (var r=0;r<=sizer+1;r++)
+{
+   cell[r]=[];
+   for (var c=0;c<=sizec+1;c++)
+   {
+     cell[r][c]= new Cell(r,c);
+     cell[r][c].ridge = new Ridge(r,c);
+   }
+ }  
 
 
 
@@ -140,9 +173,6 @@ function choosedirection(arrayofpossibledirections, location, vectorcomingfrom) 
  }
 
 
-
-
-
 // Main function, launched at html page loading
 
 var main = function() {
@@ -180,25 +210,25 @@ var main = function() {
     //           2di :   - if there's no more direction to loop with, then build()return CANT
     // Use splice() and indexOf() of the Array object to remember the directions that have not been searched yet
     
-    // -1
+    // 1
     var draw = drawtest(vector);
     console.log("drawtest returned:",draw);
+    // 2
     if (draw === 'STOP' && looplength >= minlength) {return 'DONE'}
     else if (draw === 'STOP' && looplength < minlength) {return 'CANT'}
     else if (draw === 'CANT') {return 'CANT'}
+    // 2da
     else if (draw === 'OK') {
-      // increase loop length
-      looplength = looplength + 1;
-      // draw the ridge
-      // ------  setridge(vector);
-      // prepare the array of possible directions
+      looplength = looplength + 1;       // increase loop length
+      // 2db draw the ridge
+      setridgewith(vector,1); // The second parameter set to 1 indicates we want to redraw the cell immediatlely
+      // 2dc prepare the array of possible directions
       remainingdirections = ['up','right','down','left'];
       // remove the direction we're coming from (so it is the #! opposite of vector.dir)
       remainingdirections.splice(remainingdirections.indexOf(vector.oppositedir),1);
-      // now loop into these directions and continue the loop if possible.
+      // 2dd now loop into these directions and continue the loop if possible.
       console.log('go to these dirs:',remainingdirections);
-    
-      
+         
     
     }
     
@@ -215,9 +245,9 @@ var main = function() {
     var c = vect.col;
     var d = vect.dir;
     // Test if there's an edge
-    if ((c === 0 && d === 'left') ||
+    if ((c === 1 && d === 'left') ||
         (c === sizec+1 && d === 'right') ||
-        (r === 0 && d === 'up') ||
+        (r === 1 && d === 'up') ||
         (r === sizer+1 && d === 'down'))
         {return 'CANT'};
         
@@ -229,18 +259,22 @@ var main = function() {
       {return 'CANT'};
     
     // Test if line arrives in a corner with already two lines (forming L or I or -)
-    if ((d === 'up' && ( (cell[r-1][c].ridge.up===1 & cell[r-1][c-1].ridge.up===1) ||
-                         (cell[r-2][c].ridge.left===1 & cell[r-2][c].ridge.down===1) ||
-                         (cell[r-2][c-1].ridge.right===1 & cell[r-2][c-1].ridge.down===1))) ||
-        (d === 'down' && ( (cell[r][c-1].ridge.down===1 & cell[r][c].ridge.down===1) ||
-                           (cell[r+1][c].ridge.left===1 & cell[r+1][c].ridge.up===1) ||
-                           (cell[r+1][c-1].ridge.right===1 & cell[r+1][c-1].ridge.up===1))) ||
-        (d === 'right' && ( (cell[r][c+1].ridge.left===1 & cell[r-1][c+1].ridge.left===1) ||
-                            (cell[r-1][c+1].ridge.left===1 & cell[r-1][c+1].ridge.down===1) ||
-                            (cell[r][c+1].ridge.up===1 & cell[r][c+1].ridge.left===1))) ||
-        (d === 'left' && ( (cell[r][c-1].ridge.left===1 & cell[r-1][c-1].ridge.left===1) ||
-                         (cell[r-1][c-2].ridge.right===1 & cell[r-1][c-2].ridge.down===1) ||
-                         (cell[r][c-2].ridge.up===1 & cell[r][c-2].ridge.right===1))) )
+    if ((d === 'up' && ( (cell[r-1][c].ridge.up===1 && cell[r-1][c-1].ridge.up===1) ||
+                         (cell[r-2][c].ridge.left===1 && cell[r-2][c].ridge.down===1) ||
+                         (cell[r-2][c-1].ridge.right===1 && cell[r-2][c-1].ridge.down===1))) ||
+//                         (r>2 && (cell[r-2][c].ridge.left===1 && cell[r-2][c].ridge.down===1)) ||
+//                         (r>2 && (cell[r-2][c-1].ridge.right===1 && cell[r-2][c-1].ridge.down===1)))) ||
+        (d === 'down' && ( (cell[r][c-1].ridge.down===1 && cell[r][c].ridge.down===1) ||
+                           (cell[r+1][c].ridge.left===1 && cell[r+1][c].ridge.up===1) ||
+                           (cell[r+1][c-1].ridge.right===1 && cell[r+1][c-1].ridge.up===1))) ||
+        (d === 'right' && ( (cell[r][c+1].ridge.left===1 && cell[r-1][c+1].ridge.left===1) ||
+                            (cell[r-1][c+1].ridge.left===1 && cell[r-1][c+1].ridge.down===1) ||
+                            (cell[r][c+1].ridge.up===1 && cell[r][c+1].ridge.left===1))) ||
+        (d === 'left' && ( (cell[r][c-1].ridge.left===1 && cell[r-1][c-1].ridge.left===1) ||
+                         (cell[r-1][c-2].ridge.right===1 && cell[r-1][c-2].ridge.down===1) ||
+                         (cell[r][c-2].ridge.up===1 && cell[r][c-2].ridge.right===1))) )
+//                         (c>2 && (cell[r-1][c-2].ridge.right===1 && cell[r-1][c-2].ridge.down===1)) ||
+//                         (c>2 && (cell[r][c-2].ridge.up===1 && cell[r][c-2].ridge.right===1)))) )
       {return 'CANT'};                    
                       
     // if None of the case above applies, then line can be drawn
@@ -254,31 +288,46 @@ var main = function() {
   contxt=canvasLoopIt2DContext;
   logoloopit = new Image();
   logoloopit.src = "./img/Loopit.jpg";
-  canvasLoopIt2DContext.drawImage(logoloopit,100,0);
-
- 
-  // Change some values of ridges
-  cell[1][1].ridge.up=1;
-  cell[1][1].ridge.right=1;
-  cell[2][1].ridge.right=1;
-//   var q=2;
-//   console.log("cell21r=",cell[2][q-1].ridge.right);
-//   console.log("cell22l=",cell[2][q].ridge.left);
-    cell[2][1].ridge.down=1;
-  cell[2][1].ridge.left=1;
+  contxt.drawImage(logoloopit,100,0);
+  contxt.globalAlpha = 1;
+  contxt.shadowColor = 'white';
+  contxt.CanvasGradient = 'white';
+  contxt.globalCompositeOperation = "none";
+  console.log(contxt.globalCompositeOperation);
+  console.log(contxt.CanvasGradient);
+  
+  //contxt.fillStyle = "red";
+  //contxt.fillRect(10,10,100,100);
+   //contxt.stroke();
+  //contxt.fillStyle = "blue";
+  //contxt.fillRect(50,50,100,100);
+  //contxt.stroke();
+  //contxt.lineWidth = 1;
+  //contxt.strokeStyle = "yellow";
+  //contxt.moveTo(0,75);
+  //contxt.lineTo(300,75);
+  //contxt.fillStyle = "yellow";
+   //contxt.fillRect(0,80,300,1);
+  //contxt.stroke();
+  
+  //// Change some values of ridges
+  //cell[1][1].ridge.up=1;
+  //cell[1][1].ridge.right=1;
+  //cell[2][1].ridge.right=1;
+////   var q=2;
+////   console.log("cell21r=",cell[2][q-1].ridge.right);
+////   console.log("cell22l=",cell[2][q].ridge.left);
+    //cell[2][1].ridge.down=1;
+  //cell[2][1].ridge.left=1;
    
   // Now draw the Board
   for (var r=1;r<=sizer;r++)
   { for (var c=1;c<=sizec;c++)
-     { cell[r][c].draw(50,50);
+     { cell[r][c].draw();
      }
    }  
   contxt.stroke();
   
-  drawv = new Vector(5,2,'up');
-  console.log("c22=",cell[2][2].ridge.left);
-  console.log("c21=",cell[2][1].ridge.right);
-  console.log(drawtest(drawv));
 
 
   
