@@ -19,24 +19,24 @@ function Ridge(row,col) {
     set: function(val) {ridgev[row][col+1]=val;  }   });
 }
 
-function setridgewith(vector,drawit) {
+function setridgewith(vector,value,drawit) {
   var r = vector.row;
   var c = vector.col;
   switch(vector.dir) {
     case "up":
-      cell[r-1][c].ridge.left=1;
+      cell[r-1][c].ridge.left=value;
       if (drawit===1) { cell[r-1][c].draw();}
       break;
     case "right":
-      cell[r][c].ridge.up=1;
+      cell[r][c].ridge.up=value;
       if (drawit===1) { cell[r][c].draw();}
       break;
     case "down":
-      cell[r][c].ridge.left=1;
+      cell[r][c].ridge.left=value;
       if (drawit===1) { cell[r][c].draw();}
       break;
     case "left":
-      cell[r][c-1].ridge.up=1;
+      cell[r][c-1].ridge.up=value;
       if (drawit===1) { cell[r][c-1].draw();}
       break;
   }
@@ -171,7 +171,7 @@ var main = function() {
     console.log("start in", start.r, start.c);
     vector = new Vector(start.r,start.c, choosedirection.call(null,['up','down','right','left'], [start.r, start.c] ));
     console.log("build with vector : ", vector);
-    var minlen=12;
+    var minlen=2;
     build(vector,minlen);
   }
   
@@ -180,6 +180,7 @@ var main = function() {
   // It is a function called recursively.
   function build(vector, minlength) {
     // 1 - test if we can draw if the direction of the vector, using drawtest function
+    //     vector is : startpoint.r/c and direction to go building.
     // 2 - drawtest will return -> OK, CANT, STOP (loop is closed)
     // 2a - STOP: if loop is closed and long enough -> build()return DONE (loop is looped)
     // 2b - STOP: if loop is closed and too short -> build()return CANT (cant build there, dead end)
@@ -210,26 +211,37 @@ var main = function() {
     else if (draw === 'OK') {
       looplength = looplength + 1;       // increase loop length
       // 2db draw the ridge
-      setridgewith(vector,1); // The second parameter set to 1 indicates we want to redraw the cell immediatlely
+      setridgewith(vector,1,1); // The third parameter set to 1 indicates we want to redraw the cell immediatlely
       // 2dc prepare the array of possible directions
-      remainingdirections = ['up','right','down','left'];
-      console.log('init remainingdirections:',remainingdirections.toString());
+      var remainingdirections = ['up','right','down','left'];
+      //console.log('init remainingdirections:',remainingdirections.toString());
       // remove the direction we're coming from (so it is the #! opposite of vector.dir)
       remainingdirections.splice(remainingdirections.indexOf(vector.oppositedir),1);
       // 2dd now loop into these directions and continue the loop if possible.
-      console.log('go to these dirs:',remainingdirections.toString(), "length is",remainingdirections.length);
+      //console.log('go to these dirs:',remainingdirections.toString(), "length is",remainingdirections.length);
       while (remainingdirections.length != 0) {
+        // 2de Choose a direction to go
         godir=choosedirection(remainingdirections, [dr,dc] , vector);
-        console.log('chosen to go to ',godir);
+        console.log('position is',dr,dc,'chosen to go to ',godir);
+        // 2df remove the chooosenDirection from the Direction Array
         remainingdirections.splice(remainingdirections.indexOf(godir),1);
+        // 2dg Call the build function (recursively)
+        vectortobuild = new Vector(dr,dc,godir);
+        if (build(vectortobuild,minlength)==='DONE') { return 'DONE'} // Loop is looped !
+        // else that means the build() has returned CANT, and so let's continue the while loop.        
         }
-    
+      // If this code is executed, that means that all directions have been tested, and none can't be built,so:
+      // - unset the ridge where we come from, decrease the length, and return CANT
+      console.log('Dead end, remove the ridge:',vector);
+      setridgewith(vector,0,1); 
+      looplength = looplength -1; 
+      return 'CANT';
     }
     
   }
   
   function drawtest(vect) {
-   // this function test if we can draw in the direction of the vector (vector is a location+dir)
+   // this function test if we can draw in the direction of the vector (vector is a sourcelocation+dirtogo)
    // return possibilities are :
     // 2a - STOP: drawing to a corner were a unique line is already arriving : Closing the loop
     // 2c - CANT: cant build in that direction -> there's an edge, or destination is a corner with already two lines (forming L or I or -)
@@ -238,6 +250,8 @@ var main = function() {
     var r = vect.row;
     var c = vect.col;
     var d = vect.dir;
+    
+    
     // Test if there's an edge
     if ((c === 1 && d === 'left') ||
         (c === sizec+1 && d === 'right') ||
@@ -270,7 +284,22 @@ var main = function() {
 //                         (c>2 && (cell[r-1][c-2].ridge.right===1 && cell[r-1][c-2].ridge.down===1)) ||
 //                         (c>2 && (cell[r][c-2].ridge.up===1 && cell[r][c-2].ridge.right===1)))) )
       {return 'CANT'};                    
-                      
+             
+     // Test if the loop is closed
+    if ( (d === 'up' &&    (cell[r-1][c].ridge.up===1   ||
+                            cell[r-1][c-1].ridge.up===1 ||
+                            cell[r-2][c].ridge.left===1 ))  ||
+         (d === 'down' &&  (cell[r+1][c].ridge.up===1   ||
+                            cell[r+1][c-1].ridge.up===1 ||
+                            cell[r+1][c].ridge.left===1 ))  ||
+         (d === 'right' && (cell[r-1][c].ridge.right===1   ||
+                            cell[r][c].ridge.right===1 ||
+                            cell[r][c+1].ridge.up===1 ))  ||
+         (d === 'left' &&  (cell[r-1][c-1].ridge.left===1   ||
+                            cell[r][c-1].ridge.left===1 ||
+                            cell[r][c-2].ridge.up===1 ))  )
+      { return 'STOP'};                      
+                                             
     // if None of the case above applies, then line can be drawn
     // calculate the destination:
     switch(d) {
