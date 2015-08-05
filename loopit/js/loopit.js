@@ -202,12 +202,26 @@ var main = function() {
     vector = new Vector(start.r,start.c, choosedirection.call(null,['up','down','right','left'], [start.r, start.c] ));
     console.log("build with vector : ", vector);
     build(vector,minlength);
+    // TODO next:
+    // 1 - work the choose destination function to make it smart
+    // 2 - change the output of the build function to have clean outputs ->
+    //     remove the console message saying Looped, deadend, too short..
+    // 3 - Build a loop system in the generateloop function to generate a loop each time, or 
+    //     that stops completely the program after a given threshold of bad generation
+    // 4 - Same for the build: Put a counter that count every iteration and
+    //     that stops after a certain threshold, which depends on the minlength and the size of the table
+    // 5 - Create a new function that calculates the numbers in every cell
+    // 6 - Program the solver that finds the loop thanks to the numbers in the table
+    // 7 - Play by removing numbers and see if solver can still find a unique solution
+    // 8 - Go with the user interface and build a game :)
+    
   }
   
 
   // build function : the function at the heart of the loop creation
   // It is a function called recursively.
   function build(vector, minlength) {
+       
     // 1 - test if we can draw if the direction of the vector, using drawtest function
     //     vector is : startpoint.r/c and direction to go building.
     // 2 - drawtest will return -> OK, CANT, STOP (loop is closed)
@@ -229,11 +243,11 @@ var main = function() {
     // 1
     var drawresult = drawtest(vector);
     console.log("drawtest returned:",drawresult);
-    var draw = drawresult[0];
-    console.log("draw is:",draw);
-    var dr = 0, dc =0;
-    if (draw === 'OK') { dr = drawresult[1]; dc = drawresult[2];}  // Memorize the destination
-    
+    var draw = drawresult[0],dr = drawresult[1], dc = drawresult[2];
+    //console.log("draw is:",draw);
+    //var dr = 0, dc =0;
+    //if (draw === 'OK') { dr = drawresult[1]; dc = drawresult[2];}  // Memorize the destination
+ 
     // 2
     if (draw === 'STOP' && (looplength >= minlength)) {
       console.log('####### LOOPED #######');
