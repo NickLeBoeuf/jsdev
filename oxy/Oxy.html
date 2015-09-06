@@ -1,12 +1,47 @@
+<!DOCTYPE html>
 <html>
- <script type="text/javascript" src="js/main.js">
- </script>
- <head>
-  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
- </head>
+
+<!--
+<script type="text/javascript" src="js/main.js">
+</script>
+<head>
+ <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+</head>
  <body>
   <canvas id="canvasOxy" style="border: 1px solid #000000" width="1000" height="500">
    Canvas HTML5 non supporté
   <canvas>
  <body>
+</html>
+-->
+
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <link rel="stylesheet" type="text/css" href="game-layout.css"/>
+    <title>-=Oxy=-</title>
+    <script src="./js/LAB.min.js"></script>
+    <script>
+
+        $LAB
+                .script('geom/Vector2.js').wait()
+                .script('Canvas2D.js').wait()
+                .script('system/Color.js').wait()
+                .script('system/Keys.js').wait()
+                .script('Game.js').wait()
+                .script('Oxy.js').wait(function () {
+                    console.log("Starting Game.start");
+                    Game.start('mycanvas', 1000, 500);
+                });
+
+    </script>
+</head>
+
+<body>
+<div id="gameArea">
+    <canvas id="mycanvas" style="border: 1px solid #000000" width="1000" height="500">
+     Canvas HTML5 non supporté
+     </canvas>
+ </div>
+</body>
 </html>
