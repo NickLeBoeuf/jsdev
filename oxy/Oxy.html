@@ -21,20 +21,25 @@
     <link rel="stylesheet" type="text/css" href="game-layout.css"/>
     <title>-=Oxy=-</title>
     <script src="./js/LAB.min.js"></script>
+
     <script>
-
         $LAB
-                .script('geom/Vector2.js').wait()
-                .script('Canvas2D.js').wait()
-                .script('system/Color.js').wait()
-                .script('system/Keys.js').wait()
-                .script('Game.js').wait()
-                .script('Oxy.js').wait(function () {
-                    console.log("Starting Game.start");
-                    Game.start('mycanvas', 1000, 500);
+                .script('js/geom/Vector2.js').wait()
+                .script('js/input/Mouse.js').wait()
+                .script('js/input/Keyboard.js').wait()
+                .script('js/Canvas2D.js').wait()
+                .script('js/system/Color.js').wait()
+                .script('js/system/Keys.js').wait()
+                .script('js/Game.js').wait()
+                .script('js/OxyGameWorld.js').wait()
+                .script('js/Oxy.js').wait(function(){
+                   })
+                .wait(function() {
+                  console.log("Everything is loaded");
+                  Game.start('mycanvas', 1000, 500);
                 });
-
-    </script>
+  </script>
+ 
 </head>
 
 <body>

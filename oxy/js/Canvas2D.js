@@ -32,7 +32,7 @@ Canvas2D_Singleton.prototype.drawImage = function (sprite, position, rotation, s
     this._canvasContext.drawImage(sprite, 0, 0,
         sprite.width, sprite.height,
         -origin.x * scale, -origin.y * scale,
-        sprite.width, sprite.height * scale);
+        sprite.width * scale, sprite.height * scale);
     this._canvasContext.restore();
 };
 
