@@ -3,6 +3,8 @@
 var sprites = {};
 var sounds = {};
 
+// Here we are overloading Game object functions: loadAssets and initialize
+
 Game.loadAssets = function () {
     var loadSprite = function (sprite) {
         return Game.loadSprite("./img/" + sprite);
@@ -13,7 +15,7 @@ Game.loadAssets = function () {
     };
 
     // Loading / Initializing sprites
-    sprites.logo = loadSprite("oxy_logo.jpg");
+    sprites.oxylogo = loadSprite("oxy_logo.jpg");
 
     // Loading / Initializing sounds
     // no sound for the moment
@@ -22,6 +24,6 @@ Game.loadAssets = function () {
 Game.initialize = function () {
 
     // create the game world
-    console.log("creating Game World");
+    console.log("Game.initialize function called: creating Game World");
     Game.gameWorld = new OxyGameWorld();
 };

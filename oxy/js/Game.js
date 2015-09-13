@@ -28,8 +28,9 @@ Object.defineProperty(Game_Singleton.prototype, "totalTime",
 
 Game_Singleton.prototype.start = function (canvasName, x, y) {
     this.size = new Vector2(x, y);
-    console.log("Starting game");
+    console.log("Starting game. Launching Canvas2D.initilalize");
     Canvas2D.initialize(canvasName);
+    console.log("Calling GaneloadAssets");
     this.loadAssets();
     this.assetLoadingLoop();
     console.log("'");
@@ -56,6 +57,7 @@ Game_Singleton.prototype.assetLoadingLoop = function () {
     if (!this._spritesStillLoading > 0)
         requestAnimationFrame(Game.assetLoadingLoop);
     else {
+        // When all assets have been loaded, initialize gane, and launch the mainloop
         Game.initialize();
         requestAnimationFrame(Game.mainLoop);
     }
