@@ -1,21 +1,40 @@
 "use strict";
 
 function handleKeyDown(evt) {
-    Keyboard.keyDown = evt.keyCode;
+    var code = evt.keyCode;
+    if (code < 0 || code > 255)
+        return;
+    if (!Keyboard._keyStates[code].down)
+        Keyboard._keyStates[code].pressed = true;
+    Keyboard._keyStates[code].down = true;
 }
 
 function handleKeyUp(evt) {
-    Keyboard.keyDown = -1;
+    var code = evt.keyCode;
+    if (code < 0 || code > 255)
+        return;
+    Keyboard._keyStates[code].down = false;
 }
 
 function Keyboard_Singleton() {
-    this.keyDown = -1;
+    this._keyStates = [];
+    for (var i = 0; i < 256; ++i)
+        this._keyStates.push(new ButtonState());
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
 }
 
+Keyboard_Singleton.prototype.reset = function () {
+    for (var i = 0; i < 256; ++i)
+        this._keyStates[i].pressed = false;
+};
+
+Keyboard_Singleton.prototype.pressed = function (key) {
+    return this._keyStates[key].pressed;
+};
+
 Keyboard_Singleton.prototype.down = function (key) {
-    return this.keyDown === key;
+    return this._keyStates[key].down;
 };
 
 var Keyboard = new Keyboard_Singleton();

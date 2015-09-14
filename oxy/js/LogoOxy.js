@@ -15,23 +15,23 @@ LogoOxy.prototype.reset = function () {
 };
 
 LogoOxy.prototype.handleInput = function (delta) {
-    if (Keyboard.keyDown === Keys.Q)
+    if (Keyboard._keyStates[Keys.Q].down)
         this.rotation += 0.01;
-    else if (Keyboard.keyDown === Keys.W)
+    else if (Keyboard._keyStates[Keys.W].down)
         this.rotation -= 0.01;        
-    else if (Keyboard.keyDown === Keys.A)
+    else if (Keyboard._keyStates[Keys.A].down)
         this.scale -= 0.01;        
-    else if (Keyboard.keyDown === Keys.S)
+    else if (Keyboard._keyStates[Keys.S].down)
         this.scale += 0.01;        
-    else if (Keyboard.keyDown === Keys.left)
+    else if (Keyboard._keyStates[Keys.left].down)
         this.position.x -= 1;
-    else if (Keyboard.keyDown === Keys.right)
+    else if (Keyboard._keyStates[Keys.right].down)
         this.position.x += 1;
-    else if (Keyboard.keyDown === Keys.up)
+    else if (Keyboard._keyStates[Keys.up].down)
         this.position.y -= 1
-    else if (Keyboard.keyDown === Keys.down)
+    else if (Keyboard._keyStates[Keys.down].down)
         this.position.y += 1;      
-    else if (Keyboard.keyDown === Keys.T)
+    else if (Keyboard._keyStates[Keys.T].down)
         this.visible = not(this.visible);        
 };
 
