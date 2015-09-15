@@ -26,13 +26,17 @@ Canvas2D_Singleton.prototype.initialize = function (divName, canvasName) {
     this._div = document.getElementById(divName);
 
      console.log("In Canvas2s_initialize"+this._canvas);
-   if (this._canvas.getContext)
+  if (this._canvas.getContext)
         this._canvasContext = this._canvas.getContext('2d');
     else {
         alert('Your browser is not HTML5 compatible.!');
         return;
     }
-    console.log("In Canvas2s_initialize");
+     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
+
+    this._canvasContext.mozImageSmoothingEnabled = false;
+     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
+
     window.onresize = Canvas2D_Singleton.prototype.resize;
     this.resize();
 };
