@@ -2,16 +2,17 @@
 
 function LogoOxy() {
     OxyGameObject.call(this, sprites.oxylogo);
-    this.position = new Vector2(20, 20);
+    this.position = new Vector2(200, 300);
     this.origin = this.center;
     this.visible = true;
+    this.scale = 0.1;
 }
 
 LogoOxy.prototype = Object.create(OxyGameObject.prototype);
 
 
 LogoOxy.prototype.reset = function () {
-    this.position = new Vector2(20, 20);
+    this.position = new Vector2(200, 300);
 };
 
 LogoOxy.prototype.handleInput = function (delta) {

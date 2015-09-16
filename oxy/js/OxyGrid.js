@@ -16,8 +16,14 @@ OxyGrid.prototype.reset = function () {
 
 
 OxyGrid.prototype.initTiles = function () {
-  for (var i=0; i<30;i++) {
-    this.tiles[i] = new OxyTileObject(sprites.tileset,new Rectangle(i*32,160,32,32));
+  var tile_width=32;
+  var tile_height=32;
+  var tile_posx=0;
+  var tile_posy=160;
+  var tile_number=30;
+  
+  for (var i=0; i<tile_number;i++) {
+    this.tiles[i] = new OxyTileObject(sprites.tileset,new Rectangle(i*tile_width+tile_posx,tile_posy,tile_width,tile_height));
    }
  
 };
