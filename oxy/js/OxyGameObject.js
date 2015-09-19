@@ -2,6 +2,7 @@
 
 function OxyGameObject(sprite_set) {
 
+    this.parent = null;
     this.currentSprite = sprite_set;
     this.velocity = Vector2.zero;
     this.position = Vector2.zero;
@@ -41,6 +42,17 @@ Object.defineProperty(OxyGameObject.prototype, "center",
         }
     });
 
+Object.defineProperty(OxyGameObject.prototype, "worldPosition",
+    {
+        get: function () {
+            if (this.parent !== null)
+                return this.parent.worldPosition.addTo(this.position);
+            else
+                return this.position.copy();
+        }
+    });
+    
+    
 OxyGameObject.prototype.update = function (delta) {
     this.position.addTo(this.velocity.multiply(delta));
 };
@@ -48,5 +60,5 @@ OxyGameObject.prototype.update = function (delta) {
 OxyGameObject.prototype.draw = function () {
     if (!this.visible)
         return;
-    Canvas2D.drawImage(this.currentSprite, this.position, this.rotation, this.scale, this.origin);
+    Canvas2D.drawImage(this.currentSprite, this.worldPosition, this.rotation, this.scale, this.origin);
 };
