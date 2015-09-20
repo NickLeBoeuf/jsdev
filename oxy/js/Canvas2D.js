@@ -120,5 +120,23 @@ Canvas2D_Singleton.prototype.drawText = function (text, position, origin, color,
     this._canvasContext.restore();
 };
 
+
+    Canvas2D_Singleton.prototype.drawPixel = function (x, y, color) {
+        var canvasscale = this.scale;
+        this._canvasContext.save();
+        this._canvasContext.scale(canvasscale.x, canvasscale.y);
+        this._canvasContext.fillStyle = color.toString();
+        this._canvasContext.fillRect(x, y, 1, 1);
+        this._canvasContext.restore();
+    };
+
+    Canvas2D_Singleton.prototype.drawRectangle = function (x, y, width, height) {
+        var canvasScale = this.scale;
+        this._canvasContext.save();
+        this._canvasContext.scale(canvasScale.x, canvasScale.y);
+        this._canvasContext.strokeRect(x, y, width, height);
+        this._canvasContext.restore();
+};
+
 var Canvas2D = new Canvas2D_Singleton();
 

@@ -5,11 +5,13 @@ function OxyGameObject(sprite_set) {
     this.parent = null;
     this.currentSprite = sprite_set;
     this.velocity = Vector2.zero;
-    this.position = Vector2.zero;
+    this.mapposition = Vector2.zero; // position on the Global Map of the Game
+    this._zonePosition = Vector2.zero; // position on the "screen/zone" -Relative to this.mapposition and to the topleft coords of the zone
     this.origin = Vector2.zero;
     this.rotation = 0;
     this.scale = 1;
     this.visible = false;
+    this._viewzone=new Rectangle;
     console.log("OxyGameObject created.");
 }
 
@@ -42,23 +44,61 @@ Object.defineProperty(OxyGameObject.prototype, "center",
         }
     });
 
+// The Zone-position is the position on the "screen/zone" -Relative to this.mapposition and to the topleft coords of the zone    
+Object.defineProperty(OxyGameObject.prototype, "zonePosition",
+    {
+        get: function () {
+            var vzr = this._viewzone;
+            
+            if (vzr.contains(this.mapposition)) {
+                this.visible = true;
+                this._zonePosition.x = this.mapposition.x-vzr.x;
+                this._zonePosition.y = this.mapposition.y-vzr.y;
+              }
+            else
+                this.visible = false;
+
+            return this._zonePosition;
+        },
+        set: function(value) {
+          this._zonePosition = value;
+        }
+        
+    });
+    
+Object.defineProperty(OxyGameObject.prototype, "viewzone",
+    {
+        get: function () {
+            return this._viewzone;
+        },
+        set: function(value) {
+          this._viewzone = value;
+        }
+        
+    });
+    
+    
+// The world position is a recursive function to determine the screen position relatively to parent object.
 Object.defineProperty(OxyGameObject.prototype, "worldPosition",
     {
         get: function () {
             if (this.parent !== null)
-                return this.parent.worldPosition.addTo(this.position);
+                return this.parent.worldPosition.addTo(this.zonePosition);
             else
-                return this.position.copy();
+                return this.zonePosition.copy();
         }
     });
+
+
     
-    
+        
 OxyGameObject.prototype.update = function (delta) {
-    this.position.addTo(this.velocity.multiply(delta));
+    this.mapposition.addTo(this.velocity.multiply(delta));
 };
 
 OxyGameObject.prototype.draw = function () {
     if (!this.visible)
         return;
     Canvas2D.drawImage(this.currentSprite, this.worldPosition, this.rotation, this.scale, this.origin);
+    //console.log("gameobject is visible:"+this.visible);
 };
