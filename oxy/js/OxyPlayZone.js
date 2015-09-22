@@ -57,7 +57,7 @@ OxyPlayZone.prototype.update = function (delta) {
 
 
   // Calculate the viewzone, using the mapposition
-  //this.logo.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
+  this.logo.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
   // Updating the objects of the zone
   this.logo.update(delta);
   // Recalculate the mapposition that is shown on the zone, depending on player's mapposition
@@ -81,7 +81,7 @@ OxyPlayZone.prototype.draw = function () {
   // Draw the Map Grid at topLeft position of the Zone, last argument is mapposition
   
 //  this.thegrid.draw(this.position, this.width, this.height, this.mapposition);
-  this.thegrid.draw(this.logo.mapposition, this.width, this.height);
+  this.thegrid.draw(this.position,this.logo.mapposition, this.width, this.height);
   this.thegrid.drawclip(this.position, this.width, this.height);
   this.logo.draw(); 
  

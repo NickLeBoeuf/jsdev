@@ -90,30 +90,31 @@ OxyGrid.prototype.initMap = function () {
 
 
 // draw input parameters:
+// position -> absolute topleft position in pixel where to draw the map on Canvas
 // mapposition -> position of the player on the map
 // width, height -> size in pixel of the portion of the map to display
-OxyGrid.prototype.draw = function (mapposition, width, height) {
+OxyGrid.prototype.draw = function (position,mapposition, width, height) {
   // mapposition is the location in the map to start drawing in the Zone
   
   // Get the Rectangle where to display the Map. (in map pixel-coords)
   var pos = this.viewzone(mapposition, width, height);
   Canvas2D.drawText("viewzone pos:"+pos.x+" "+pos.y+" "+pos.width+" "+pos.height, new Vector2(10, 480), new Vector2, Color.black);
 
-  //var pos=position.copy();
+  var zonepos=position.copy();
   var xpos =pos.x; var ypos=pos.y;
-  var xmap = Math.floor(mapposition.x/this.tile_width);
-  var ymap = Math.floor(mapposition.y/this.tile_height);
-  var xoffset =  mapposition.x%this.tile_width;
-  var yoffset =  mapposition.y%this.tile_height;
+  var xmap = Math.floor(xpos/this.tile_width);
+  var ymap = Math.floor(ypos/this.tile_height);
+  var xoffset =  xpos%this.tile_width;
+  var yoffset =  ypos%this.tile_height;
   
-  xpos -= xoffset;
-  ypos -= yoffset;
+  zonepos.x -= xoffset;
+  zonepos.y -= yoffset;
   var maxwidth = Math.floor(width/this.tile_width)+1;
   var maxheight = Math.floor(height/this.tile_height)+1;
   //console.log("maxw="+width+"%"+this.tile_width+"="+maxwidth);
   for (var x=0; x<maxwidth;x++) {
     for (var y=0; y<maxheight;y++) {
-        this.tiles[this.map[(x+xmap)+(y+ymap)*this.width]].draw(new Vector2(xpos+this.tile_width*x,ypos+this.tile_height*y)); 
+        this.tiles[this.map[(x+xmap)+(y+ymap)*this.width]].draw(new Vector2(zonepos.x+this.tile_width*x,zonepos.y+this.tile_height*y)); 
     }
   }  
 }
