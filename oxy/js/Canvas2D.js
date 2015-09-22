@@ -134,7 +134,7 @@ Canvas2D_Singleton.prototype.drawText = function (text, position, origin, color,
         var canvasScale = this.scale;
         this._canvasContext.save();
         this._canvasContext.scale(canvasScale.x, canvasScale.y);
-        this._canvasContext.strokeRect(x, y, width, height);
+        this._canvasContext.clearRect(x, y, width, height);
         this._canvasContext.restore();
 };
 

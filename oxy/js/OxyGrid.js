@@ -13,11 +13,51 @@ function OxyGrid(width, height) {
  }
 
 
+Object.defineProperty(OxyGrid.prototype, "pixelwidth",
+    { get: function () {return this.tile_width*this.width;}  } );
+
+Object.defineProperty(OxyGrid.prototype, "pixelheight",
+    { get: function () {return this.tile_height*this.height;}  } );
 
 OxyGrid.prototype.reset = function () {
 
 };
 
+
+// the viewzone returns a Rectangle that is indicating the Zone of the map that must be drawn. (in pixels)
+// Input Parameter is "ppos" = player position. The player position is in the center of the zone, +/- a ratio
+// that is applied horizontally and vertically -> ratioud and ratiolr.
+// width and height input parameters are indicating the size of the zone to be displayed
+OxyGrid.prototype.viewzone = function (ppos, width, height) {
+    
+    var ratiolr = 0.5;
+    var ratioud = 0.8;
+    var topleft  = new Vector2( ppos.x - width * ratiolr,
+    ppos.y - height * ratioud);
+    //var topright = new Vector2( ppos.x + this.width * (1-this.ratiolr),
+    //                            ppos.y - this.height * this.ratioud);
+    // console.log("viewzone is "+topright.x+topright.y);
+    //var botleft  = new Vector2( ppos.x - this.width * this.ratiolr,
+    //                            ppos.y + this.height * (1-this.ratioud));
+    //var botright = new Vector2( ppos.x + this.width * (1-this.ratiolr),
+    //                            ppos.y + this.height * (1-this.ratioud));
+    // TODO: the (topright.x-topleft.x),(botright.y-topright.y) are in fact width and height
+    //return new Rectangle(topleft.x, topleft.y ,(topright.x-topleft.x),(botright.y-topright.y));                                                
+    
+    // If zone is too near from the edge of the Map, then stuck it at 0 or maxval-width/height
+    var maxright = (this.width*this.tile_width)-width;
+    var maxdown  = (this.height*this.tile_height)-height;
+    if (topleft.x < 0) topleft.x = 0
+    else if (topleft.x >= maxright) topleft.x=maxright-1;
+    if (topleft.y < 0) topleft.y = 0;
+    else if (topleft.y >= maxdown) topleft.y=maxdown-1;
+
+    
+    
+    return new Rectangle(topleft.x, topleft.y ,width,height);                                                
+                 
+  }
+  
 
 OxyGrid.prototype.initTiles = function () {
   this.tile_width=32;

@@ -87,6 +87,7 @@ Game_Singleton.prototype.mainLoop = function () {
 
     Game.gameWorld.handleInput(delta);
     Game.gameWorld.update(delta);
+    // TODO : this can be optimized, be clearing only what's needed
     Canvas2D.clear();
     Game.gameWorld.draw();
 

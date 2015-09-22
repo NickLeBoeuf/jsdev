@@ -5,34 +5,43 @@ function OxyPlayZone() {
   // All objects part of the playing game will use the draw method of this OxyPlayZone object
   this.parent = null;
   this.position = new Vector2(50,100);
-  this.width = 210;
-  this.height = 250;
+  this.width = 224;
+  this.height = 256;
   // The Raios are constants for the moment, but could be changed future versions (ie Mulltiplayer)
   this.ratiolr = 0.5; // This is the Left-Right ratio : indicate the realtive player H-position % Map
   this.ratioud = 0.5; // This is the Up-Down ratio : indicate the realtive player V-position % Map
   console.log("OxyPlayzone created");
  
-  this.viewzone = { width:  this.width,
-                   height: this.height,
-                   ratiolr: 0.5,
-                   ratioud: 0.8,
-                   coords: function(ppos) {
-                     var topleft  = new Vector2( ppos.x - this.width * this.ratiolr,
-                                                 ppos.y - this.height * this.ratioud);
-                     var topright = new Vector2( ppos.x + this.width * (1-this.ratiolr),
-                                                 ppos.y - this.height * this.ratioud);
-                   // console.log("viewzone is "+topright.x+topright.y);
-                     var botleft  = new Vector2( ppos.x - this.width * this.ratiolr,
-                                                 ppos.y + this.height * (1-this.ratioud));
-                     var botright = new Vector2( ppos.x + this.width * (1-this.ratiolr),
-                                                 ppos.y + this.height * (1-this.ratioud));
-                     // TODO: the (topright.x-topleft.x),(botright.y-topright.y) are in fact width and height
-                     return new Rectangle(topleft.x, topleft.y ,(topright.x-topleft.x),(botright.y-topright.y));                                                
-                   }                 
-                   }
+  //this.viewzone = { width:  this.width,
+                   //height: this.height,
+                   //ratiolr: 0.5,
+                   //ratioud: 0.8,
+                   //coords: function(ppos) {
+                     //var topleft  = new Vector2( ppos.x - this.width * this.ratiolr,
+                                                 //ppos.y - this.height * this.ratioud);
+                     ////var topright = new Vector2( ppos.x + this.width * (1-this.ratiolr),
+                     ////                            ppos.y - this.height * this.ratioud);
+                   //// console.log("viewzone is "+topright.x+topright.y);
+                     ////var botleft  = new Vector2( ppos.x - this.width * this.ratiolr,
+                     ////                            ppos.y + this.height * (1-this.ratioud));
+                     ////var botright = new Vector2( ppos.x + this.width * (1-this.ratiolr),
+                     ////                            ppos.y + this.height * (1-this.ratioud));
+                     //// TODO: the (topright.x-topleft.x),(botright.y-topright.y) are in fact width and height
+                     ////return new Rectangle(topleft.x, topleft.y ,(topright.x-topleft.x),(botright.y-topright.y));                                                
+
+                     //// If zone is too near from the edge of the Map, then stuck it at 0 or maxval-width/height
+                    //if (topleft.x < 0) topleft.x = 0
+                    //else if (topleft.x > 125) topleft.x=125;
+                    //if (topleft.y < 0) topleft.y = 0;
+                    
+
+
+                     //return new Rectangle(topleft.x, topleft.y ,this.width,this.height);                                                
+                   //}                 
+                   //}
                    
   this.logo = new LogoOxy(); this.logo.parent=this;
-  this.thegrid = new OxyGrid(40,40); this.thegrid.parent = this;
+  this.thegrid = new OxyGrid(10,10); this.thegrid.parent = this;
   this.thegrid.initTiles();
   this.thegrid.initMap();
   this.mapposition = new Vector2(0,0);                   
@@ -48,7 +57,7 @@ OxyPlayZone.prototype.update = function (delta) {
 
 
   // Calculate the viewzone, using the mapposition
-  this.logo.viewzone = this.viewzone.coords(this.logo.mapposition);;
+  this.logo.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
   // Updating the objects of the zone
   this.logo.update(delta);
   // Recalculate the mapposition that is shown on the zone, depending on player's mapposition
