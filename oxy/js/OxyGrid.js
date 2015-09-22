@@ -60,14 +60,19 @@ OxyGrid.prototype.viewzone = function (ppos, width, height) {
   
 
 OxyGrid.prototype.initTiles = function () {
-  this.tile_width=32;
-  this.tile_height=32;
+  this.tile_widthOnSrcImg=32;
+  this.tile_heightOnSrcImg=32;
+  
+  this.tile_scale=2;
+  this.tile_width=this.tile_widthOnSrcImg*this.tile_scale;
+  this.tile_height=this.tile_heightOnSrcImg*this.tile_scale;
+
   var tile_posx=0;
   var tile_posy=160;
   var tile_number=30;
   
   for (var i=0; i<tile_number;i++) {
-    this.tiles[i] = new OxyTileObject(sprites.tileset,new Rectangle(i*this.tile_width+tile_posx,tile_posy,this.tile_width,this.tile_height));
+    this.tiles[i] = new OxyTileObject(sprites.tileset,new Rectangle(i*this.tile_widthOnSrcImg+tile_posx,tile_posy,this.tile_widthOnSrcImg,this.tile_heightOnSrcImg));
    }
  
 };
@@ -114,7 +119,7 @@ OxyGrid.prototype.draw = function (position,mapposition, width, height) {
   //console.log("maxw="+width+"%"+this.tile_width+"="+maxwidth);
   for (var x=0; x<maxwidth;x++) {
     for (var y=0; y<maxheight;y++) {
-        this.tiles[this.map[(x+xmap)+(y+ymap)*this.width]].draw(new Vector2(zonepos.x+this.tile_width*x,zonepos.y+this.tile_height*y)); 
+        this.tiles[this.map[(x+xmap)+(y+ymap)*this.width]].draw(new Vector2(zonepos.x+this.tile_width*x,zonepos.y+this.tile_height*y),this.tile_scale); 
     }
   }  
 }

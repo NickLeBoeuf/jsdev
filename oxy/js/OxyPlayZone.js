@@ -4,9 +4,9 @@ function OxyPlayZone() {
   // Creating Zone object : This will be the area where the action will take place.
   // All objects part of the playing game will use the draw method of this OxyPlayZone object
   this.parent = null;
-  this.position = new Vector2(50,100);
-  this.width = 224;
-  this.height = 256;
+  this.position = new Vector2(50,30);
+  this.width = 320;  // this must be a multiple of tile_width to get a good clipping
+  this.height = 256; // this must be a multiple of tile_height to get a good clipping
   // The Raios are constants for the moment, but could be changed future versions (ie Mulltiplayer)
   this.ratiolr = 0.5; // This is the Left-Right ratio : indicate the realtive player H-position % Map
   this.ratioud = 0.5; // This is the Up-Down ratio : indicate the realtive player V-position % Map

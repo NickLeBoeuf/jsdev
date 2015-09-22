@@ -37,8 +37,8 @@ Object.defineProperty(OxyTileObject.prototype, "center",
         }
     });
 
-OxyTileObject.prototype.draw = function (position) {
+OxyTileObject.prototype.draw = function (position, scale) {
   //  console.log("Drawing OxyTileObject with position ="+position);
-    Canvas2D.drawImage(this.currentSprite, position, 0, 1, new Vector2, this.sourceRect);
+    Canvas2D.drawImage(this.currentSprite, position, 0, scale, new Vector2, this.sourceRect);
   //Canvas2D_Singleton.prototype.drawImage = function (sprite, position, rotation, scale, origin, sourceRect) {
    };
