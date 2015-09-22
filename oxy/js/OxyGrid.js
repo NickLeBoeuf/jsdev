@@ -89,13 +89,17 @@ OxyGrid.prototype.initMap = function () {
 };   
 
 
-
-OxyGrid.prototype.draw = function (position, width, height, mapposition) {
-  // position is the location where to draw the Map in Pixels, on Canvas
+// draw input parameters:
+// mapposition -> position of the player on the map
+// width, height -> size in pixel of the portion of the map to display
+OxyGrid.prototype.draw = function (mapposition, width, height) {
   // mapposition is the location in the map to start drawing in the Zone
   
-  
-  var pos=position.copy();
+  // Get the Rectangle where to display the Map. (in map pixel-coords)
+  var pos = this.viewzone(mapposition, width, height);
+  Canvas2D.drawText("viewzone pos:"+pos.x+" "+pos.y+" "+pos.width+" "+pos.height, new Vector2(10, 480), new Vector2, Color.black);
+
+  //var pos=position.copy();
   var xpos =pos.x; var ypos=pos.y;
   var xmap = Math.floor(mapposition.x/this.tile_width);
   var ymap = Math.floor(mapposition.y/this.tile_height);

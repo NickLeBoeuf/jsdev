@@ -57,12 +57,12 @@ OxyPlayZone.prototype.update = function (delta) {
 
 
   // Calculate the viewzone, using the mapposition
-  this.logo.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
+  //this.logo.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
   // Updating the objects of the zone
   this.logo.update(delta);
   // Recalculate the mapposition that is shown on the zone, depending on player's mapposition
-  this.mapposition.x = this.logo.viewzone.x;
-  this.mapposition.y = this.logo.viewzone.y;
+  //this.mapposition.x = this.logo.viewzone.x;
+  //this.mapposition.y = this.logo.viewzone.y;
   
   
   
@@ -74,13 +74,14 @@ OxyPlayZone.prototype.draw = function () {
     Canvas2D.drawText("logo pos:"+this.logo.mapposition.x+" "+this.logo.mapposition.y+
                        "  zonepos:"+this.logo.zonePosition+" "+this.logo._zonePosition.y,
                        new Vector2(10, 460), new Vector2, Color.black);
-    Canvas2D.drawText("viewzone pos:"+this.logo.viewzone.x+" "+this.logo.viewzone.y+" "+this.logo.viewzone.width+" "+this.logo.viewzone.height, new Vector2(10, 480), new Vector2, Color.black);
+  //  Canvas2D.drawText("viewzone pos:"+this.logo.viewzone.x+" "+this.logo.viewzone.y+" "+this.logo.viewzone.width+" "+this.logo.viewzone.height, new Vector2(10, 480), new Vector2, Color.black);
 
  // Drawing the zone and its objects
  
   // Draw the Map Grid at topLeft position of the Zone, last argument is mapposition
   
-  this.thegrid.draw(this.position, this.width, this.height, this.mapposition);
+//  this.thegrid.draw(this.position, this.width, this.height, this.mapposition);
+  this.thegrid.draw(this.logo.mapposition, this.width, this.height);
   this.thegrid.drawclip(this.position, this.width, this.height);
   this.logo.draw(); 
  
