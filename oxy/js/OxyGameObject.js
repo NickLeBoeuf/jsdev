@@ -48,9 +48,15 @@ Object.defineProperty(OxyGameObject.prototype, "center",
 Object.defineProperty(OxyGameObject.prototype, "zonePosition",
     {
         get: function () {
+            var vzrclip = this._viewzone;
             var vzr = this._viewzone;
+            //vzrclip.x -= this.width;
+            //vzrclip.y -= this.heigth;
+            //vzrclip.width += this.width;
+            //vzrclip.height += this.height;
             
-            if (vzr.contains(this.mapposition)) {
+            
+            if (vzrclip.contains(this.mapposition)) {
                 this.visible = true;
                 this._zonePosition.x = this.mapposition.x-vzr.x;
                 this._zonePosition.y = this.mapposition.y-vzr.y;
@@ -94,6 +100,7 @@ Object.defineProperty(OxyGameObject.prototype, "worldPosition",
         
 OxyGameObject.prototype.update = function (delta) {
     this.mapposition.addTo(this.velocity.multiply(delta));
+    var temp_pos = this.worldPosition;
 };
 
 OxyGameObject.prototype.draw = function () {

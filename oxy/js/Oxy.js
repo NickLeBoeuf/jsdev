@@ -16,6 +16,7 @@ Game.loadAssets = function () {
 
     // Loading / Initializing sprites
     sprites.oxylogo = loadSprite("oxy_logo.jpg");
+    sprites.tyrianset = loadSprite("tyrian_tiles.png");
     sprites.tileset = loadSprite("terrain.png");
 
     // Loading / Initializing sounds

@@ -10,8 +10,9 @@ function OxyPlayZone() {
   // The Raios are constants for the moment, but could be changed future versions (ie Mulltiplayer)
   this.ratiolr = 0.5; // This is the Left-Right ratio : indicate the realtive player H-position % Map
   this.ratioud = 0.5; // This is the Up-Down ratio : indicate the realtive player V-position % Map
+  this.viewzone = null;
   console.log("OxyPlayzone created");
- 
+  
   //this.viewzone = { width:  this.width,
                    //height: this.height,
                    //ratiolr: 0.5,
@@ -39,7 +40,9 @@ function OxyPlayZone() {
                      //return new Rectangle(topleft.x, topleft.y ,this.width,this.height);                                                
                    //}                 
                    //}
-                   
+            
+  this.ship = new SpriteObject(sprites.tyrianset, new Rectangle(51,140,18,26));this.ship.parent=this; 
+  this.ship.mapposition = new Vector2(400,400);    this.ship.visible=true;         
   this.logo = new LogoOxy(); this.logo.parent=this;
   this.thegrid = new OxyGrid(10,10); this.thegrid.parent = this;
   this.thegrid.initTiles();
@@ -57,7 +60,10 @@ OxyPlayZone.prototype.update = function (delta) {
 
 
   // Calculate the viewzone, using the mapposition
-  this.logo.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
+  this.viewzone = this.thegrid.viewzone(this.logo.mapposition, this.width, this.height);;
+  this.logo.viewzone = this.viewzone;
+  this.ship.viewzone = this.viewzone;
+  this.ship.update(delta);
   // Updating the objects of the zone
   this.logo.update(delta);
   // Recalculate the mapposition that is shown on the zone, depending on player's mapposition
@@ -72,8 +78,11 @@ OxyPlayZone.prototype.update = function (delta) {
 OxyPlayZone.prototype.draw = function () {
 
     Canvas2D.drawText("logo pos:"+this.logo.mapposition.x+" "+this.logo.mapposition.y+
-                       "  zonepos:"+this.logo.zonePosition+" "+this.logo._zonePosition.y,
+                       "  zonepos:"+this.logo._zonePosition,
                        new Vector2(10, 460), new Vector2, Color.black);
+   Canvas2D.drawText("ship pos:"+this.ship.mapposition.x+" "+this.ship.mapposition.y+
+                       "  zonepos:"+this.ship._zonePosition+" ship w:"+this.ship.width,
+                       new Vector2(10, 440), new Vector2, Color.black);
   //  Canvas2D.drawText("viewzone pos:"+this.logo.viewzone.x+" "+this.logo.viewzone.y+" "+this.logo.viewzone.width+" "+this.logo.viewzone.height, new Vector2(10, 480), new Vector2, Color.black);
 
  // Drawing the zone and its objects
@@ -82,10 +91,11 @@ OxyPlayZone.prototype.draw = function () {
   
 //  this.thegrid.draw(this.position, this.width, this.height, this.mapposition);
   this.thegrid.draw(this.position,this.logo.mapposition, this.width, this.height);
-  this.thegrid.drawclip(this.position, this.width, this.height);
   this.logo.draw(); 
- 
-
+  //this.ship.visible=true;
+  this.ship.draw();
+  this.thegrid.drawclip(this.position, this.width, this.height);
+  
 };
 
 OxyPlayZone.prototype.reset = function () {
