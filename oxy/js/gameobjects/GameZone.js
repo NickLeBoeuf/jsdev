@@ -7,17 +7,15 @@ function GameZone(definiton_rectangle,id) {
     this.width = definiton_rectangle.width;
     this.height = definiton_rectangle.height;
     // the cornerpos gives the mapposition corresponds to the upper left corner of the zone
-    this.cornerpos = new Vector2.zero;
+    this.cornerpos = new Vector2;
     // the focuspos is the theorical center of the gamezone, given in mapposition units.
     // It comes with the UpDown and LeftRightRatio that are a number tbetween 0 and 1
-    this.focuspos = new Vector2.zero;
+    this.focuspos = new Vector2;
     this.udratio = 0.8; // the focus will have 80% of zone upper the focus and 20% down
     this.lrratio = 0.5; // the focus will be in the horizontal middle of the zone.
     // Example of functioning: the focuspos will be updated with the player's mapposition
     // and all the objects (map, ennemies, player) will be drawn with respect
-    // to the corenerpos(mapposition) and this.position (pixels)
-    
-    
+    // to the corenerpos(mapposition) and this.position (pixels)   
     this.parent = null;
     this._visible = true;
 
@@ -66,4 +64,15 @@ GameZone.prototype.update = function (delta) {
     
 };
 
+GameZone.prototype.handleInput = function (delta) {
+    
+};
 
+GameZone.prototype.draw = function () {
+    console.log ("Calling Gamezone draw:"+this.position+" "+this.width+" "+this.height);
+    if (!this.visible)
+        return;
+    //Canvas2D._canvasContext.fillRect(10,10,20,20);
+    Canvas2D.drawRectangle(this.position.x,this.position.y,this.width,this.height, Color.gray);
+
+};

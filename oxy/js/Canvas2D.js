@@ -130,11 +130,12 @@ Canvas2D_Singleton.prototype.drawText = function (text, position, origin, color,
         this._canvasContext.restore();
     };
 
-    Canvas2D_Singleton.prototype.drawRectangle = function (x, y, width, height) {
+    Canvas2D_Singleton.prototype.drawRectangle = function (x, y, width, height, color) {
         var canvasScale = this.scale;
         this._canvasContext.save();
         this._canvasContext.scale(canvasScale.x, canvasScale.y);
-        this._canvasContext.clearRect(x, y, width, height);
+        this._canvasContext.fillStyle = color;
+        this._canvasContext.fillRect(x, y, width, height);
         this._canvasContext.restore();
 };
 

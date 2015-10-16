@@ -1,12 +1,16 @@
 "use strict";
 
 function OxyGameWorld(layer, id) {
-    GameObjectList.call(this, layer, id);
+    GameObjectList.call(this, layer, id); // TODO there's no global gamezone
 
-     // add the playing field
-    var playingField = new GameObjectList(ID.layer_objects);
-    playingField.position = new Vector2(85, 150);
-    this.add(playingField);
+    // Create the GameZone
+    var gamezone1 = new GameZone(new Rectangle(10,10,600,400),ID.gamezone1);
+    this.add(gamezone1);
+    
+    // add the playing field
+    var playingField = new GameObjectList(ID.layer_objects, ID.playingField, gamezone1);
+    playingField.position = gamezone1.position; // TODO we could use gamezone.position directly in the GameList
+    this.add(playingField); // Add the object to the OxyGameWorld list
 
     // add the grid
     var rows = 10, columns = 5;

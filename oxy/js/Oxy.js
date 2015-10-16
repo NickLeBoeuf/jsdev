@@ -40,7 +40,8 @@ Game.initialize = function () {
 
     ID.grid = 1;
     ID.player = 2;
-    
+    ID.playingField = 3;
+    ID.gamezone1 = 4;
 
     // create the game world
     console.log("creating Game World");

@@ -2,8 +2,8 @@
 
 GameObjectList.prototype = Object.create(GameObject.prototype);
 
-function GameObjectList(layer, id) {
-    GameObject.call(this, layer, id);
+function GameObjectList(layer, id, gamezone) {
+    GameObject.call(this, layer, id, gamezone);
 
     this._gameObjects = [];
 }

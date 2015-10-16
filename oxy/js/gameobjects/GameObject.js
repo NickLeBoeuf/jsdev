@@ -1,8 +1,9 @@
 "use strict";
 
-function GameObject(layer, id) {
+function GameObject(layer, id, gamezone) {
     this.layer = typeof layer !== 'undefined' ? layer : 0;
     this.id = typeof id !== 'undefined' ? id : 0;
+    this.gamezone = gamezone;
     this.parent = null;
     this.position = Vector2.zero;
     this.velocity = Vector2.zero;
