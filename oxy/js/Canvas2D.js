@@ -32,10 +32,10 @@ Canvas2D_Singleton.prototype.initialize = function (divName, canvasName) {
         alert('Your browser is not HTML5 compatible.!');
         return;
     }
-     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
-
+    
+//     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
     this._canvasContext.mozImageSmoothingEnabled = false;
-     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
+//     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
 
     window.onresize = Canvas2D_Singleton.prototype.resize;
     this.resize();

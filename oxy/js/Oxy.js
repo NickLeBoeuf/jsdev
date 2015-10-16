@@ -1,5 +1,6 @@
 "use strict";
 
+var ID = {};
 var sprites = {};
 var sounds = {};
 
@@ -25,7 +26,23 @@ Game.loadAssets = function () {
 
 Game.initialize = function () {
 
+    // define the layers
+    ID.layer_background = 1;
+    ID.layer_tiles = 10;
+    ID.layer_objects = 20;
+    ID.layer_objects_1 = 21;
+    ID.layer_objects_2 = 22;
+    ID.layer_overlays = 30;
+    ID.layer_overlays_1 = 31;
+    ID.layer_overlays_2 = 32;
+
+    // define object IDs
+
+    ID.grid = 1;
+    ID.player = 2;
+    
+
     // create the game world
-    console.log("Game.initialize function called: creating Game World");
+    console.log("creating Game World");
     Game.gameWorld = new OxyGameWorld();
 };

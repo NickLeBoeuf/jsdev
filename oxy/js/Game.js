@@ -55,7 +55,7 @@ Game_Singleton.prototype.loadSprite = function (imageName) {
     return image;
 };
 
-Game_Singleton.prototype.start = function (divName, canvasName, x, y) {
+Game_Singleton.prototype.start = function (divName, canvasName, x, y) { 
     this._size = new Vector2(x, y);
     Canvas2D.initialize(divName, canvasName);
     this.loadAssets();
@@ -102,3 +102,4 @@ Game_Singleton.prototype.mainLoop = function () {
 };
 
 var Game = new Game_Singleton();
+
