@@ -1,0 +1,23 @@
+
+
+sprite ->
+- xmap,ymap
+- draw(xmap,ymap) -> call zone_drawsprite
+
+
+map ->
+- height, width  
+- tiles..
+- draw -> call zone_drawmap
+
+zone->
+- screenx,screeny, width, height, ratio
+- constant: player-ratio-ud, player_ratio-lr  (for calculation of visible map coords)
+- visible: maptopx,maptopy,bottomx,bottomy, width/height
+- zone_drawsprite
+- zone_drawmap
+
+- game ->
+ zone1, zone2...
+ 
+ 
