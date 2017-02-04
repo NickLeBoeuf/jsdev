@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="game-layout.css"/>
+    <title>-=Oxy2017=-</title>
+    <script src="./js/LAB.min.js"></script>
+
+    <script>
+        $LAB
+               // .script('js/Math.js').wait()
+               .script('js/geom/Vector2.js').wait()
+               .script('js/geom/Rectangle.js').wait()
+               .script('js/Canvas2D.js').wait()
+               .script('js/system/Color.js').wait()
+               .script('js/system/Keys.js').wait()
+             //   .script('js/input/ButtonState.js').wait()
+             //   .script('js/input/Keyboard.js').wait()
+             //   .script('js/input/Mouse.js').wait()
+             //   .script('js/input/Touch.js').wait()
+                  .script('js/Game.js').wait()              
+             //   .script('js/gameobjects/GameObject.js').wait()
+             //   .script('js/gameobjects/GameObjectList.js').wait()
+             //   .script('js/gameobjects/GameObjectGrid.js').wait()
+             //   .script('js/gameobjects/GameZone.js').wait()
+                //.script('js/OxyTileObject.js').wait()
+                //.script('js/TileMap.js').wait()
+                //.script('js/OxyGrid.js').wait()
+                //.script('js/OxyGameObject.js').wait()
+                //.script('js/SpriteObject.js').wait()
+                //.script('js/LogoOxy.js').wait()
+                //.script('js/OxyPlayZone.js').wait()
+                //.script('js/OxyGameObject.js').wait()
+               // .script('js/gameobjects/OxyGameWorld.js').wait()
+                .script('js/Oxy.js').wait(function(){ })
+                .wait(function() {
+                  console.log("Everything is loaded");
+                  Game.start('gameArea','mycanvas', 1000, 500);
+                  console.log("Game Start finished");
+                });
+  </script>
+ 
+</head>
+
+<body>
+<div id="gameArea">
+    <canvas id="mycanvas"> 
+<!--
+       style="border: 1px solid #000000" width="1000" height="500">  
+-->
+     Canvas HTML5 not supported
+     </canvas>
+ </div>
+</body>
+</html>
