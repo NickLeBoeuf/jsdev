@@ -34,7 +34,7 @@ Canvas2D_Singleton.prototype.initialize = function (divName, canvasName) {
     }
     
 //     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
-    this._canvasContext.mozImageSmoothingEnabled = false;
+    this._canvasContext.ImageSmoothingEnabled = false;
 //     console.log("imageSmoothingEnabled:"+this._canvasContext.mozImageSmoothingEnabled);
 
     window.onresize = Canvas2D_Singleton.prototype.resize;
