@@ -88,7 +88,7 @@ Game_Singleton.prototype.assetLoadingLoop = function () {
 };
 
 Game_Singleton.prototype.mainLoop = function () {
-    console.log("in MAINLOOP");
+    //console.log("in MAINLOOP");
     var delta = 1 / 60;
     this._totalTime += delta;
     this.gameWorld.handleInput(delta);

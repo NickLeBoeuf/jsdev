@@ -69,7 +69,7 @@ GameZone.prototype.handleInput = function (delta) {
 };
 
 GameZone.prototype.draw = function () {
-    console.log ("Calling Gamezone draw:"+this.position+" "+this.width+" "+this.height);
+    //console.log ("Calling Gamezone draw:"+this.position+" "+this.width+" "+this.height);
     if (!this.visible)
         return;
     //Canvas2D._canvasContext.fillRect(10,10,20,20);

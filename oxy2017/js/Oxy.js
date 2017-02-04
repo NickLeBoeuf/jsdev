@@ -47,5 +47,5 @@ Game.initialize = function () {
 
     // create the game world
     console.log("creating Game World");
-    //#@Game.gameWorld = new OxyGameWorld();
+    Game.gameWorld = new OxyGameWorld();
 };
